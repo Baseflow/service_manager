@@ -1,49 +1,107 @@
 package com.baseflow.service_manager;
 
+import android.app.Activity;
+
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
-import io.flutter.plugin.common.MethodCall;
+import io.flutter.embedding.engine.plugins.activity.ActivityAware;
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
+import io.flutter.plugin.common.BinaryMessenger;
 import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
-import io.flutter.plugin.common.MethodChannel.Result;
+import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 
-/** ServiceManagerPlugin */
-public class ServiceManagerPlugin implements FlutterPlugin, MethodCallHandler {
-  /// The MethodChannel that will the communication between Flutter and native Android
-  ///
-  /// This local reference serves to register the plugin with the Flutter Engine and unregister it
-  /// when the Flutter Engine is detached from the Activity
-  private MethodChannel channel;
+@FunctionalInterface
+interface ActivityRegistry {
+    void addListener(PluginRegistry.ActivityResultListener handler);
+}
 
-  @Override
-  public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
-    channel = new MethodChannel(flutterPluginBinding.getFlutterEngine().getDartExecutor(), "service_manager");
-    channel.setMethodCallHandler(this);
-  }
+@FunctionalInterface
+interface SuccessCallback {
+    void onSuccess(boolean result);
+}
 
-  // This static function is optional and equivalent to onAttachedToEngine. It supports the old
-  // pre-Flutter-1.12 Android projects. You are encouraged to continue supporting
-  // plugin registration via this function while apps migrate to use the new Android APIs
-  // post-flutter-1.12 via https://flutter.dev/go/android-project-migration.
-  //
-  // It is encouraged to share logic between onAttachedToEngine and registerWith to keep
-  // them functionally equivalent. Only one of onAttachedToEngine or registerWith will be called
-  // depending on the user's project. onAttachedToEngine or registerWith must both be defined
-  // in the same class.
-  public static void registerWith(Registrar registrar) {
-    final MethodChannel channel = new MethodChannel(registrar.messenger(), "service_manager");
-    channel.setMethodCallHandler(new ServiceManagerPlugin());
-  }
+public class ServiceManagerPlugin implements FlutterPlugin, ActivityAware {
 
-  @Override
-  public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-    
-  }
+    private MethodChannel methodChannel;
+    @Nullable
+    private MethodCallHandlerImpl methodCallHandler;
 
-  @Override
-  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
-    channel.setMethodCallHandler(null);
-  }
+    public static void registerWith(Registrar registrar) {
+        final ServiceManagerPlugin plugin = new ServiceManagerPlugin();
+        plugin.startListening(registrar.messenger());
+
+        if (registrar.activeContext() instanceof Activity) {
+            plugin.startListeningToActivity(
+                    registrar.activity(),
+                    registrar::addActivityResultListener
+            );
+        }
+    }
+
+    @Override
+    public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
+        startListening(
+                binding.getBinaryMessenger()
+        );
+    }
+
+    @Override
+    public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+        stopListening();
+    }
+
+    @Override
+    public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
+        startListeningToActivity(
+                binding.getActivity(),
+                binding::addActivityResultListener
+        );
+    }
+
+    @Override
+    public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
+        onAttachedToActivity(binding);
+    }
+
+    @Override
+    public void onDetachedFromActivity() {
+        stopListeningToActivity();
+    }
+
+    @Override
+    public void onDetachedFromActivityForConfigChanges() {
+        onDetachedFromActivity();
+    }
+
+    private void startListening(BinaryMessenger messenger) {
+        methodChannel = new MethodChannel(messenger, "flutter.baseflow.com/service_manager");
+        methodCallHandler = new MethodCallHandlerImpl(new ServiceManager());
+        methodChannel.setMethodCallHandler(methodCallHandler);
+    }
+
+    private void stopListening() {
+        methodChannel.setMethodCallHandler(null);
+        methodChannel = null;
+        methodCallHandler = null;
+    }
+
+    private void startListeningToActivity(
+            Activity activity,
+            ActivityRegistry activityRegistry
+    ) {
+        if (methodCallHandler != null) {
+            methodCallHandler.setActivity(activity);
+            methodCallHandler.setActivityRegistry(activityRegistry);
+        }
+    }
+
+    private void stopListeningToActivity() {
+        if (methodCallHandler != null) {
+            methodCallHandler.setActivity(null);
+            methodCallHandler.setActivityRegistry(null);
+        }
+    }
 }
