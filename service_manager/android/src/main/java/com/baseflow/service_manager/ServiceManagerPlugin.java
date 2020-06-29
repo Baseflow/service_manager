@@ -1,6 +1,7 @@
 package com.baseflow.service_manager;
 
 import android.app.Activity;
+import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,6 +10,7 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.BinaryMessenger;
+import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
@@ -29,9 +31,13 @@ public class ServiceManagerPlugin implements FlutterPlugin, ActivityAware {
     @Nullable
     private MethodCallHandlerImpl methodCallHandler;
 
+    private EventChannel eventChannel;
+    @Nullable
+    private EventStreamHandlerImpl eventStreamHandler;
+
     public static void registerWith(Registrar registrar) {
         final ServiceManagerPlugin plugin = new ServiceManagerPlugin();
-        plugin.startListening(registrar.messenger());
+        plugin.startListening(registrar.context(), registrar.messenger());
 
         if (registrar.activeContext() instanceof Activity) {
             plugin.startListeningToActivity(
@@ -44,6 +50,7 @@ public class ServiceManagerPlugin implements FlutterPlugin, ActivityAware {
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
         startListening(
+                binding.getApplicationContext(),
                 binding.getBinaryMessenger()
         );
     }
@@ -76,16 +83,24 @@ public class ServiceManagerPlugin implements FlutterPlugin, ActivityAware {
         onDetachedFromActivity();
     }
 
-    private void startListening(BinaryMessenger messenger) {
-        methodChannel = new MethodChannel(messenger, "flutter.baseflow.com/service_manager");
+    private void startListening(Context applicationContext, BinaryMessenger messenger) {
+        methodChannel = new MethodChannel(messenger, "flutter.baseflow.com/service_manager/methods");
         methodCallHandler = new MethodCallHandlerImpl(new ServiceManager());
         methodChannel.setMethodCallHandler(methodCallHandler);
+
+        eventChannel = new EventChannel(messenger, "flutter.baseflow.com/service_manager/events");
+        eventStreamHandler = new EventStreamHandlerImpl(new ServiceManager(), applicationContext);
+        eventChannel.setStreamHandler(eventStreamHandler);
     }
 
     private void stopListening() {
         methodChannel.setMethodCallHandler(null);
         methodChannel = null;
         methodCallHandler = null;
+
+        eventChannel.setStreamHandler(null);
+        eventChannel = null;
+        eventStreamHandler = null;
     }
 
     private void startListeningToActivity(

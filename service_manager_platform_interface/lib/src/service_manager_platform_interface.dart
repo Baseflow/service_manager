@@ -25,4 +25,8 @@ abstract class ServiceManagerPlatform extends PlatformInterface {
     throw UnimplementedError('askForBluetoothPermission() has not yet been implemented');
   }
 
+  Stream<dynamic> get state {
+    throw UnimplementedError('listenForBluetoothStateChanges() has not yet been implemented');
+  }
+
 }

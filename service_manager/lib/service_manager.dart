@@ -3,3 +3,5 @@ import 'package:service_manager_platform_interface/service_manager_platform_inte
 Future<bool> isBluetoothEnabled() => ServiceManagerPlatform.instance.isBluetoothEnabled();
 
 Future<bool> askForBluetoothPermission() => ServiceManagerPlatform.instance.askForBluetoothPermission();
+
+Stream<dynamic> get state => ServiceManagerPlatform.instance.state;
