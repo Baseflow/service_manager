@@ -8,7 +8,7 @@ import android.content.IntentFilter;
 
 import io.flutter.plugin.common.EventChannel;
 
-public class BLuetootStateStreamHandlerImpl implements EventChannel.StreamHandler {
+class BluetootStateStreamHandlerImpl implements EventChannel.StreamHandler {
 
     private final ServiceManager serviceManager;
     private final Context applicationContext;
@@ -16,7 +16,7 @@ public class BLuetootStateStreamHandlerImpl implements EventChannel.StreamHandle
     private BroadcastReceiver stateReceiver;
     private EventChannel.EventSink eventSink;
 
-    public BLuetootStateStreamHandlerImpl(ServiceManager serviceManager, Context applicationContext) {
+    public BluetootStateStreamHandlerImpl(ServiceManager serviceManager, Context applicationContext) {
 
         this.serviceManager = serviceManager;
         this.applicationContext = applicationContext;
@@ -30,11 +30,29 @@ public class BLuetootStateStreamHandlerImpl implements EventChannel.StreamHandle
 
                 final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1);
                 switch (state) {
+                    case BluetoothAdapter.STATE_CONNECTED:
+                        eventSink.success(BluetoothAdapter.STATE_CONNECTED);
+                        break;
+                    case BluetoothAdapter.STATE_CONNECTING:
+                        eventSink.success(BluetoothAdapter.STATE_CONNECTING);
+                        break;
+                    case BluetoothAdapter.STATE_DISCONNECTED:
+                        eventSink.success(BluetoothAdapter.STATE_DISCONNECTED);
+                        break;
+                    case BluetoothAdapter.STATE_DISCONNECTING:
+                        eventSink.success(BluetoothAdapter.STATE_DISCONNECTING);
+                        break;
                     case BluetoothAdapter.STATE_OFF:
                         eventSink.success(BluetoothAdapter.STATE_OFF);
                         break;
                     case BluetoothAdapter.STATE_ON:
                         eventSink.success(BluetoothAdapter.STATE_ON);
+                        break;
+                    case BluetoothAdapter.STATE_TURNING_OFF:
+                        eventSink.success(BluetoothAdapter.STATE_TURNING_OFF);
+                        break;
+                    case BluetoothAdapter.STATE_TURNING_ON:
+                        eventSink.success(BluetoothAdapter.STATE_TURNING_ON);
                         break;
                     default:
                         break;
