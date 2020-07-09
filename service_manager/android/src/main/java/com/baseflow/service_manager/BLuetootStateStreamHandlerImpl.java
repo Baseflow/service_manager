@@ -8,7 +8,7 @@ import android.content.IntentFilter;
 
 import io.flutter.plugin.common.EventChannel;
 
-public class EventStreamHandlerImpl implements EventChannel.StreamHandler {
+public class BLuetootStateStreamHandlerImpl implements EventChannel.StreamHandler {
 
     private final ServiceManager serviceManager;
     private final Context applicationContext;
@@ -16,7 +16,7 @@ public class EventStreamHandlerImpl implements EventChannel.StreamHandler {
     private BroadcastReceiver stateReceiver;
     private EventChannel.EventSink eventSink;
 
-    public EventStreamHandlerImpl(ServiceManager serviceManager, Context applicationContext) {
+    public BLuetootStateStreamHandlerImpl(ServiceManager serviceManager, Context applicationContext) {
 
         this.serviceManager = serviceManager;
         this.applicationContext = applicationContext;
