@@ -1,9 +1,9 @@
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
+import 'enums/enums.dart';
 import 'implementations/method_channel_service_manager.dart';
 
 abstract class ServiceManagerPlatform extends PlatformInterface {
-
   ServiceManagerPlatform() : super(token: _token);
 
   static final Object _token = Object();
@@ -18,15 +18,17 @@ abstract class ServiceManagerPlatform extends PlatformInterface {
   }
 
   Future<bool> isBluetoothEnabled() {
-   throw UnimplementedError('isBluetoothEnabled() has not yet been implemented');
+    throw UnimplementedError(
+        'isBluetoothEnabled() has not yet been implemented');
   }
 
   Future<bool> askForBluetoothPermission() {
-    throw UnimplementedError('askForBluetoothPermission() has not yet been implemented');
+    throw UnimplementedError(
+        'askForBluetoothPermission() has not yet been implemented');
   }
 
-  Stream<dynamic> get state {
-    throw UnimplementedError('listenForBluetoothStateChanges() has not yet been implemented');
+  Stream<BluetoothState> get state {
+    throw UnimplementedError(
+        'state() has not yet been implemented');
   }
-
 }

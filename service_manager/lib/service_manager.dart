@@ -1,7 +1,12 @@
 import 'package:service_manager_platform_interface/service_manager_platform_interface.dart';
+export 'package:service_manager_platform_interface/src/enums/enums.dart';
 
-Future<bool> isBluetoothEnabled() => ServiceManagerPlatform.instance.isBluetoothEnabled();
+class ServiceManager {
+  static Future<bool> isBluetoothEnabled() =>
+      ServiceManagerPlatform.instance.isBluetoothEnabled();
 
-Future<bool> askForBluetoothPermission() => ServiceManagerPlatform.instance.askForBluetoothPermission();
+  static Future<bool> askForBluetoothPermission() =>
+      ServiceManagerPlatform.instance.askForBluetoothPermission();
 
-Stream<dynamic> get state => ServiceManagerPlatform.instance.state;
+  static Stream<BluetoothState> get state => ServiceManagerPlatform.instance.state;
+}
