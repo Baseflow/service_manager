@@ -17,11 +17,11 @@ class _ServiceManagerWidgetState extends State<ServiceManagerWidget> {
   }
 
   Future<void> _initBluetooth() async {
-    bool bluetoothEnabled = await isBluetoothEnabled();
+    // bool bluetoothEnabled = await isBluetoothEnabled();
 
-    setState(() {
-      _bluetoothEnabled = bluetoothEnabled;
-    });
+    // setState(() {
+    //   _bluetoothEnabled = bluetoothEnabled;
+    // });
 
     state.listen((state) {
       switch (state) {
@@ -31,6 +31,7 @@ class _ServiceManagerWidgetState extends State<ServiceManagerWidget> {
           });
           break;
         case 12:
+          print('12');
           setState(() {
             _bluetoothEnabled = true;
           });
