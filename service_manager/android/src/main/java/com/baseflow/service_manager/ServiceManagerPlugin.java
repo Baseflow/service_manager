@@ -29,11 +29,11 @@ public class ServiceManagerPlugin implements FlutterPlugin, ActivityAware {
 
     private MethodChannel methodChannel;
     @Nullable
-    private MethodCallHandlerImpl methodCallHandler;
+    private MethodCallHandler methodCallHandler;
 
     private EventChannel bluetoothStateChannel;
     @Nullable
-    private BluetootStateStreamHandlerImpl bluetoothStreamHandler;
+    private BluetoothStateStreamHandler bluetoothStreamHandler;
 
     public static void registerWith(Registrar registrar) {
         final ServiceManagerPlugin plugin = new ServiceManagerPlugin();
@@ -85,11 +85,11 @@ public class ServiceManagerPlugin implements FlutterPlugin, ActivityAware {
 
     private void startListening(Context applicationContext, BinaryMessenger messenger) {
         methodChannel = new MethodChannel(messenger, "flutter.baseflow.com/service_manager/methods");
-        methodCallHandler = new MethodCallHandlerImpl(new ServiceManager());
+        methodCallHandler = new MethodCallHandler(new ServiceManager());
         methodChannel.setMethodCallHandler(methodCallHandler);
 
-        bluetoothStateChannel = new EventChannel(messenger, "flutter.baseflow.com/service_manager/events/bluetooth");
-        bluetoothStreamHandler = new BluetootStateStreamHandlerImpl(new ServiceManager(), applicationContext);
+        bluetoothStateChannel = new EventChannel(messenger, "flutter.baseflow.com/service_manager/state/bluetooth");
+        bluetoothStreamHandler = new BluetoothStateStreamHandler(new ServiceManager(), applicationContext);
         bluetoothStateChannel.setStreamHandler(bluetoothStreamHandler);
     }
 

@@ -8,11 +8,11 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.Result;
 
-final class MethodCallHandlerImpl implements MethodChannel.MethodCallHandler {
+final class MethodCallHandler implements MethodChannel.MethodCallHandler {
 
     private final ServiceManager serviceManager;
 
-    MethodCallHandlerImpl(ServiceManager serviceManager) {
+    MethodCallHandler(ServiceManager serviceManager) {
         this.serviceManager = serviceManager;
     }
 

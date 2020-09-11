@@ -5,10 +5,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.util.Log;
 
 import io.flutter.plugin.common.EventChannel;
 
-class BluetootStateStreamHandlerImpl implements EventChannel.StreamHandler {
+class BluetoothStateStreamHandler implements EventChannel.StreamHandler {
 
     private final ServiceManager serviceManager;
     private final Context applicationContext;
@@ -16,7 +17,7 @@ class BluetootStateStreamHandlerImpl implements EventChannel.StreamHandler {
     private BroadcastReceiver stateReceiver;
     private EventChannel.EventSink eventSink;
 
-    public BluetootStateStreamHandlerImpl(ServiceManager serviceManager, Context applicationContext) {
+    public BluetoothStateStreamHandler(ServiceManager serviceManager, Context applicationContext) {
 
         this.serviceManager = serviceManager;
         this.applicationContext = applicationContext;
@@ -31,28 +32,30 @@ class BluetootStateStreamHandlerImpl implements EventChannel.StreamHandler {
                 final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1);
                 switch (state) {
                     case BluetoothAdapter.STATE_CONNECTED:
-                        eventSink.success(BluetoothAdapter.STATE_CONNECTED);
+                        //eventSink.success(BluetoothAdapter.STATE_CONNECTED);
                         break;
                     case BluetoothAdapter.STATE_CONNECTING:
-                        eventSink.success(BluetoothAdapter.STATE_CONNECTING);
+                        //eventSink.success(BluetoothAdapter.STATE_CONNECTING);
                         break;
                     case BluetoothAdapter.STATE_DISCONNECTED:
-                        eventSink.success(BluetoothAdapter.STATE_DISCONNECTED);
+                        //eventSink.success(BluetoothAdapter.STATE_DISCONNECTED);
                         break;
                     case BluetoothAdapter.STATE_DISCONNECTING:
-                        eventSink.success(BluetoothAdapter.STATE_DISCONNECTING);
+                        //eventSink.success(BluetoothAdapter.STATE_DISCONNECTING);
                         break;
                     case BluetoothAdapter.STATE_OFF:
-                        eventSink.success(BluetoothAdapter.STATE_OFF);
+                        Log.d("STATE OFF", BluetoothState.OFF.toString());
+                        eventSink.success(BluetoothState.OFF.ordinal());
                         break;
                     case BluetoothAdapter.STATE_ON:
-                        eventSink.success(BluetoothAdapter.STATE_ON);
+                        Log.d("STATE OFF", BluetoothState.ON.toString());
+                        eventSink.success(BluetoothState.ON.ordinal());
                         break;
                     case BluetoothAdapter.STATE_TURNING_OFF:
-                        eventSink.success(BluetoothAdapter.STATE_TURNING_OFF);
+                        //eventSink.success(BluetoothAdapter.STATE_TURNING_OFF);
                         break;
                     case BluetoothAdapter.STATE_TURNING_ON:
-                        eventSink.success(BluetoothAdapter.STATE_TURNING_ON);
+                        //eventSink.success(BluetoothAdapter.STATE_TURNING_ON);
                         break;
                     default:
                         break;
