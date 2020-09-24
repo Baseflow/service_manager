@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:service_manager/service_manager.dart';
 import 'package:service_manager_example/template/globals.dart';
@@ -71,7 +73,7 @@ class _ServiceManagerWidgetState extends State<ServiceManagerWidget> {
               child: RaisedButton(
                 child: Text('Enable bluetooth'),
                 onPressed:
-                    _bluetoothEnabled ? null : _askForBluetoothPermission,
+                    !_bluetoothEnabled && Platform.isAndroid ? _askForBluetoothPermission : null,
               ),
             ),
           ],
