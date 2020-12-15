@@ -10,47 +10,31 @@ class ServiceManagerWidget extends StatefulWidget {
 }
 
 class _ServiceManagerWidgetState extends State<ServiceManagerWidget> {
-  bool _bluetoothEnabled = false;
+  //bool _bluetoothEnabled = false;
+  var _bluetoothState;
 
   @override
   void initState() {
     super.initState();
-    _initBluetooth();
+    _initBluetoothState();
   }
 
-  Future<void> _initBluetooth() async {
-    bool bluetoothEnabled = await ServiceManager.isBluetoothEnabled();
-
-    setState(() {
-      _bluetoothEnabled = bluetoothEnabled;
-    });
-
+  Future<void> _initBluetoothState() async {
     ServiceManager.state.listen((state) {
-      switch (state) {
-        case BluetoothState.OFF:
-          setState(() {
-            _bluetoothEnabled = false;
-          });
-          break;
-        case BluetoothState.ON:
-          setState(() {
-            _bluetoothEnabled = true;
-          });
-          break;
-        default:
-          break;
-      }
+      setState(() {
+         _bluetoothState = state;
+      });
     });
   }
 
   Future<void> _askForBluetoothPermission() async {
     bool wasBluetoothEnabled = await ServiceManager.askForBluetoothPermission();
 
-    if (!_bluetoothEnabled && wasBluetoothEnabled) {
-      setState(() {
-        _bluetoothEnabled = true;
-      });
-    }
+    // if (!_bluetoothEnabled && wasBluetoothEnabled) {
+    //   setState(() {
+    //     _bluetoothEnabled = true;
+    //   });
+    // }
   }
 
   @override
@@ -63,7 +47,7 @@ class _ServiceManagerWidgetState extends State<ServiceManagerWidget> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Bluetooth enabled: $_bluetoothEnabled',
+              'Bluetooth state: ' + _bluetoothState.toString(),
               style: Theme.of(context).textTheme.bodyText1,
             ),
             Padding(
@@ -73,7 +57,7 @@ class _ServiceManagerWidgetState extends State<ServiceManagerWidget> {
               child: RaisedButton(
                 child: Text('Enable bluetooth'),
                 onPressed:
-                    !_bluetoothEnabled && Platform.isAndroid ? _askForBluetoothPermission : null,
+                    Platform.isAndroid ? _askForBluetoothPermission : null,
               ),
             ),
           ],

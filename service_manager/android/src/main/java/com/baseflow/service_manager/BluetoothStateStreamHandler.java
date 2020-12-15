@@ -31,18 +31,6 @@ class BluetoothStateStreamHandler implements EventChannel.StreamHandler {
 
                 final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1);
                 switch (state) {
-                    case BluetoothAdapter.STATE_CONNECTED:
-                        //eventSink.success(BluetoothAdapter.STATE_CONNECTED);
-                        break;
-                    case BluetoothAdapter.STATE_CONNECTING:
-                        //eventSink.success(BluetoothAdapter.STATE_CONNECTING);
-                        break;
-                    case BluetoothAdapter.STATE_DISCONNECTED:
-                        //eventSink.success(BluetoothAdapter.STATE_DISCONNECTED);
-                        break;
-                    case BluetoothAdapter.STATE_DISCONNECTING:
-                        //eventSink.success(BluetoothAdapter.STATE_DISCONNECTING);
-                        break;
                     case BluetoothAdapter.STATE_OFF:
                         Log.d("STATE OFF", BluetoothState.OFF.toString());
                         eventSink.success(BluetoothState.OFF.ordinal());
@@ -51,13 +39,8 @@ class BluetoothStateStreamHandler implements EventChannel.StreamHandler {
                         Log.d("STATE OFF", BluetoothState.ON.toString());
                         eventSink.success(BluetoothState.ON.ordinal());
                         break;
-                    case BluetoothAdapter.STATE_TURNING_OFF:
-                        //eventSink.success(BluetoothAdapter.STATE_TURNING_OFF);
-                        break;
-                    case BluetoothAdapter.STATE_TURNING_ON:
-                        //eventSink.success(BluetoothAdapter.STATE_TURNING_ON);
-                        break;
                     default:
+                        eventSink.success(BluetoothState.UNKNOWN.ordinal());
                         break;
                 }
             }

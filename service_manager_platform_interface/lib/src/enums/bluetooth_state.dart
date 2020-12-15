@@ -1,1 +1,1 @@
-enum BluetoothState { OFF, ON }
+enum BluetoothState { UNKNOWN, OFF, ON }

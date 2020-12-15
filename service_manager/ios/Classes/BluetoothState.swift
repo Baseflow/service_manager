@@ -1,5 +1,5 @@
 import Foundation
 
 enum BluetoothState: Int {
-    case OFF = 0, ON
+    case UNKNOWN = 0, OFF, ON
 }

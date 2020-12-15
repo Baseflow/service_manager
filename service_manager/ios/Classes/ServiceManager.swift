@@ -6,11 +6,6 @@ class ServiceManager {
     var centralManager = CBCentralManager();
     
     func isBluetoothEnabled() -> Bool {
-        let bluetoothState = centralManager.state.rawValue;
-        if (bluetoothState == 5) {
-            return true;
-        } else {
-            return false;
-        }
+        return (self.centralManager.state == .poweredOn) ? true : false
     }
 }

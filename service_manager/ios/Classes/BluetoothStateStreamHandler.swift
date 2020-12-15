@@ -14,21 +14,15 @@ public class BluetoothStateStreamHandler: NSObject, CBCentralManagerDelegate, Fl
     public func centralManagerDidUpdateState(_ central: CBCentralManager) {
            switch central.state {
              case .unknown:
-               print("central.state is .unknown")
-             case .resetting:
-               print("central.state is .resetting")
-             case .unsupported:
-               print("central.state is .unsupported")
-             case .unauthorized:
-               print("central.state is .unauthorized")
+                self.bluetoothStateSink?(BluetoothState.UNKNOWN.rawValue);
              case .poweredOff:
                print("central.state is .poweredOff")
-               self.bluetoothStateSink?(BluetoothState.OFF.rawValue);
+                self.bluetoothStateSink?(BluetoothState.OFF.rawValue);
              case .poweredOn:
                 print("central.state is .poweredOn")
                 self.bluetoothStateSink?(BluetoothState.ON.rawValue);
            @unknown default:
-            print("Central manager has encountered an unknown state")
+            self.bluetoothStateSink?(BluetoothState.UNKNOWN.rawValue);
         }
     }
     

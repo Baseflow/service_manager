@@ -30,11 +30,13 @@ class MethodChannelServiceManager extends ServiceManagerPlatform {
         .map((state) {
       switch (state) {
         case 0:
-          return BluetoothState.OFF;
+          return BluetoothState.UNKNOWN;
         case 1:
+          return BluetoothState.OFF;
+        case 2:
           return BluetoothState.ON;
         default:
-          return BluetoothState.OFF;
+          return BluetoothState.UNKNOWN;
       }
     });
   }
