@@ -32,11 +32,9 @@ class BluetoothStateStreamHandler implements EventChannel.StreamHandler {
                 final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, -1);
                 switch (state) {
                     case BluetoothAdapter.STATE_OFF:
-                        Log.d("STATE OFF", BluetoothState.OFF.toString());
                         eventSink.success(BluetoothState.OFF.ordinal());
                         break;
                     case BluetoothAdapter.STATE_ON:
-                        Log.d("STATE OFF", BluetoothState.ON.toString());
                         eventSink.success(BluetoothState.ON.ordinal());
                         break;
                     default:
