@@ -15,7 +15,7 @@ dependencies:
     git:
       url: git@github.com:Baseflow/service_manager.git
       path: service_manager_platform_interface/
-      ref: master
+      ref: 8e45b287d16e9f9b3ce57f713fc3e81199b4b083
 
 dev_dependencies:
   flutter_test:
