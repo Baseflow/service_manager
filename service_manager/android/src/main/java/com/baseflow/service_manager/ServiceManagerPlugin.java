@@ -1,6 +1,7 @@
 package com.baseflow.service_manager;
 
 import android.app.Activity;
+import android.content.Context;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,6 +10,7 @@ import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.embedding.engine.plugins.activity.ActivityAware;
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.BinaryMessenger;
+import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
@@ -27,11 +29,15 @@ public class ServiceManagerPlugin implements FlutterPlugin, ActivityAware {
 
     private MethodChannel methodChannel;
     @Nullable
-    private MethodCallHandlerImpl methodCallHandler;
+    private MethodCallHandler methodCallHandler;
+
+    private EventChannel bluetoothStateChannel;
+    @Nullable
+    private BluetoothStateStreamHandler bluetoothStreamHandler;
 
     public static void registerWith(Registrar registrar) {
         final ServiceManagerPlugin plugin = new ServiceManagerPlugin();
-        plugin.startListening(registrar.messenger());
+        plugin.startListening(registrar.context(), registrar.messenger());
 
         if (registrar.activeContext() instanceof Activity) {
             plugin.startListeningToActivity(
@@ -44,6 +50,7 @@ public class ServiceManagerPlugin implements FlutterPlugin, ActivityAware {
     @Override
     public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
         startListening(
+                binding.getApplicationContext(),
                 binding.getBinaryMessenger()
         );
     }
@@ -76,16 +83,24 @@ public class ServiceManagerPlugin implements FlutterPlugin, ActivityAware {
         onDetachedFromActivity();
     }
 
-    private void startListening(BinaryMessenger messenger) {
-        methodChannel = new MethodChannel(messenger, "flutter.baseflow.com/service_manager");
-        methodCallHandler = new MethodCallHandlerImpl(new ServiceManager());
+    private void startListening(Context applicationContext, BinaryMessenger messenger) {
+        methodChannel = new MethodChannel(messenger, "flutter.baseflow.com/service_manager/methods");
+        methodCallHandler = new MethodCallHandler(new ServiceManager());
         methodChannel.setMethodCallHandler(methodCallHandler);
+
+        bluetoothStateChannel = new EventChannel(messenger, "flutter.baseflow.com/service_manager/state/bluetooth");
+        bluetoothStreamHandler = new BluetoothStateStreamHandler(new ServiceManager(), applicationContext);
+        bluetoothStateChannel.setStreamHandler(bluetoothStreamHandler);
     }
 
     private void stopListening() {
         methodChannel.setMethodCallHandler(null);
         methodChannel = null;
         methodCallHandler = null;
+
+        bluetoothStateChannel.setStreamHandler(null);
+        bluetoothStateChannel = null;
+        bluetoothStreamHandler = null;
     }
 
     private void startListeningToActivity(

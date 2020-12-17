@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:service_manager/service_manager.dart';
 import 'package:service_manager_example/template/globals.dart';
@@ -8,30 +10,29 @@ class ServiceManagerWidget extends StatefulWidget {
 }
 
 class _ServiceManagerWidgetState extends State<ServiceManagerWidget> {
-  bool _bluetoothEnabled = false;
+  var _bluetoothState = BluetoothState.UNKNOWN;
 
   @override
   void initState() {
     super.initState();
-    _isBluetoothEnabled();
+    _initBluetoothState();
   }
 
-  Future<void> _isBluetoothEnabled() async {
-    bool bluetoothEnabled = await isBluetoothEnabled();
+  Future<void> _initBluetoothState() async {
 
-    setState(() {
-      _bluetoothEnabled = bluetoothEnabled;
+    bool bluetoothEnabled = await ServiceManager.isBluetoothEnabled();
+
+    _bluetoothState = bluetoothEnabled ? BluetoothState.ON : BluetoothState.OFF;
+
+    ServiceManager.state.listen((state) {
+      setState(() {
+         _bluetoothState = state;
+      });
     });
   }
 
   Future<void> _askForBluetoothPermission() async {
-    bool wasBluetoothEnabled = await askForBluetoothPermission();
-
-    if (!_bluetoothEnabled && wasBluetoothEnabled) {
-      setState(() {
-        _bluetoothEnabled = true;
-      });
-    }
+    bool wasBluetoothEnabled = await ServiceManager.askForBluetoothPermission();
   }
 
   @override
@@ -40,19 +41,21 @@ class _ServiceManagerWidgetState extends State<ServiceManagerWidget> {
         padding:
             Globals.defaultHorizontalPadding + Globals.defaultVerticalPadding,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
+            Text(
+              _bluetoothState.toString(),
+              style: Theme.of(context).textTheme.bodyText1
+            ),
             Padding(
               padding: EdgeInsets.only(top: 32),
             ),
             Center(
               child: RaisedButton(
-                child: Text(
-                  _bluetoothEnabled ? 'Bluetooth enabled' : 'Enable bluetooth',
-                ),
+                child: Text('Enable bluetooth'),
                 onPressed:
-                    _bluetoothEnabled ? null : _askForBluetoothPermission,
+                    Platform.isAndroid && _bluetoothState != BluetoothState.ON ? _askForBluetoothPermission : null,
               ),
             ),
           ],
