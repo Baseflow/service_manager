@@ -1,6 +1,6 @@
 name: service_manager
-description: A Flutter plugin to manage the state of platform specific services (e.g. location services).
-version: 0.0.1
+description: A Flutter plugin to manage the state of platform specific services (e.g. Bluetooth services).
+version: 0.1.0
 author:
 homepage:
 
