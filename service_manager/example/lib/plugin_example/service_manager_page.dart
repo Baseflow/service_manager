@@ -19,14 +19,15 @@ class _ServiceManagerWidgetState extends State<ServiceManagerWidget> {
   }
 
   Future<void> _initBluetoothState() async {
-
     bool bluetoothEnabled = await ServiceManager.isBluetoothEnabled();
 
-    _bluetoothState = bluetoothEnabled ? BluetoothState.ON : BluetoothState.OFF;
+    setState(() {
+      _bluetoothState = bluetoothEnabled ? BluetoothState.ON : BluetoothState.OFF;
+    });
 
     ServiceManager.state.listen((state) {
       setState(() {
-         _bluetoothState = state;
+        _bluetoothState = state;
       });
     });
   }
@@ -44,10 +45,8 @@ class _ServiceManagerWidgetState extends State<ServiceManagerWidget> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              _bluetoothState.toString(),
-              style: Theme.of(context).textTheme.bodyText1
-            ),
+            Text(_bluetoothState.toString(),
+                style: Theme.of(context).textTheme.bodyText1),
             Padding(
               padding: EdgeInsets.only(top: 32),
             ),
@@ -55,7 +54,9 @@ class _ServiceManagerWidgetState extends State<ServiceManagerWidget> {
               child: RaisedButton(
                 child: Text('Enable bluetooth'),
                 onPressed:
-                    Platform.isAndroid && _bluetoothState != BluetoothState.ON ? _askForBluetoothPermission : null,
+                    Platform.isAndroid && _bluetoothState != BluetoothState.ON
+                        ? _askForBluetoothPermission
+                        : null,
               ),
             ),
           ],
