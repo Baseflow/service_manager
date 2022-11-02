@@ -22,7 +22,8 @@ class _ServiceManagerWidgetState extends State<ServiceManagerWidget> {
     bool bluetoothEnabled = await ServiceManager.isBluetoothEnabled();
 
     setState(() {
-      _bluetoothState = bluetoothEnabled ? BluetoothState.ON : BluetoothState.OFF;
+      _bluetoothState =
+          bluetoothEnabled ? BluetoothState.ON : BluetoothState.OFF;
     });
 
     ServiceManager.state.listen((state) {
@@ -51,7 +52,7 @@ class _ServiceManagerWidgetState extends State<ServiceManagerWidget> {
               padding: EdgeInsets.only(top: 32),
             ),
             Center(
-              child: RaisedButton(
+              child: ElevatedButton(
                 child: Text('Enable bluetooth'),
                 onPressed:
                     Platform.isAndroid && _bluetoothState != BluetoothState.ON
