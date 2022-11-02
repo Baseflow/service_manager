@@ -5,8 +5,8 @@ author:
 homepage:
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
-  flutter: ">=1.10.0"
+  sdk: ">=2.18.0 <3.0.0"
+  flutter: ">=3.3.7"
 
 dependencies:
   flutter:
@@ -15,7 +15,7 @@ dependencies:
     git:
       url: git@github.com:Baseflow/service_manager.git
       path: service_manager_platform_interface/
-      ref: d83bfbe7a2180cc5d915e0a28344da98d63520b1
+      ref: a092fbf8dac50bd5626384f5970488f1dca69022
 
 dev_dependencies:
   flutter_test:
