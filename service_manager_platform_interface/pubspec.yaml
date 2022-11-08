@@ -1,8 +1,6 @@
 name: service_manager_platform_interface
 description: Platform interface for Service Manager plugin.
 version: 0.1.0
-author:
-homepage:
 
 environment:
   sdk: ">=2.18.0 <3.0.0"
