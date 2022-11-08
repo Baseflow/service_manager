@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:service_manager_example/template/globals.dart';
 
 void main() {
@@ -15,7 +14,6 @@ class BaseflowPluginExample extends StatelessWidget {
     return MaterialApp(
       title: 'Baseflow ${Globals.pluginName}',
       theme: ThemeData(
-        accentColor: Colors.white60,
         backgroundColor: const Color.fromRGBO(48, 49, 60, 0.8),
         buttonTheme: ButtonThemeData(
           buttonColor: themeMaterialColor.shade500,
@@ -25,7 +23,6 @@ class BaseflowPluginExample extends StatelessWidget {
         ),
         bottomAppBarColor: const Color.fromRGBO(57, 58, 71, 1),
         hintColor: themeMaterialColor.shade500,
-        primarySwatch: createMaterialColor(const Color.fromRGBO(48, 49, 60, 1)),
         textTheme: TextTheme(
           bodyText1: TextStyle(
             color: Colors.white,
@@ -48,6 +45,10 @@ class BaseflowPluginExample extends StatelessWidget {
           fillColor: const Color.fromRGBO(37, 37, 37, 1),
           filled: true,
         ),
+        colorScheme: ColorScheme.fromSwatch(
+                primarySwatch:
+                    createMaterialColor(const Color.fromRGBO(48, 49, 60, 1)))
+            .copyWith(secondary: Colors.white60),
       ),
       home: MyHomePage(title: 'Baseflow ${Globals.pluginName} example app'),
     );
@@ -70,12 +71,12 @@ class BaseflowPluginExample extends StatelessWidget {
         1,
       );
     });
-    return MaterialColor(color.value, swatch);
+    return MaterialColor(color.value, swatch.cast<int, Color>());
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
